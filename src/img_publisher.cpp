@@ -15,27 +15,46 @@ int main(int argc, char** argv)
  
   cv::VideoCapture cap;
   cv::Mat frame;
-  int deviceID=4;
-  if(argc>1)
-	deviceID=argv[1][0]-'0';
-  int apiID=cv::CAP_ANY;
-  cap.open(deviceID+apiID);
+  int deviceID=0;
+  // if(argc>1)
+	// deviceID=argv[1][0]-'0';
+  int apiID = cv::CAP_ANY;
+  cap.open(deviceID, apiID);
+
+    //check backend api name
+  std::cout << cap.getBackendName() << std::endl;
+
   if(!cap.isOpened()){
 	  std::cerr<<"ERROR! Unable to open camera"<<std::endl;
 	  return -1;
   }
  
+  //set parameters of the camera
+  cap.set(cv::CAP_PROP_BUFFERSIZE, 2);
+  cap.set(cv::CAP_PROP_FRAME_WIDTH, 640);
+  cap.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
+  cap.set(cv::CAP_PROP_FPS, 30);
+
   cv::Mat resized;
 
 
-  ros::Rate loop_rate(15);
+  ros::Rate loop_rate(30);
   while (nh.ok()) {
 	  cap.read(frame);
-    cv::resize(frame, resized, cv::Size(640, 480));  
+    // cv::resize(frame, resized, cv::Size(640, 480));  
 
 	  if(!frame.empty()){
-		  sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", resized).toImageMsg();
+
+      cv::imshow( "Frame", frame );
+
+      // Press  ESC on keyboard to exit
+      char c=(char)cv::waitKey(25);
+      if(c==27)
+        break;
+
+		  sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "mono8", frame).toImageMsg();
 		  pub.publish(msg);
+      ROS_INFO("Publsihed!");
   	}
     ros::spinOnce();
     loop_rate.sleep();
