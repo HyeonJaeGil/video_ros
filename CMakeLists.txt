@@ -27,9 +27,11 @@ add_executable(img_publisher src/img_publisher.cpp)
 add_executable(img_viewer src/img_viewer.cpp)
 add_executable(img_saver src/img_saver.cpp)
 add_executable(marker_handler src/MarkerHandler.cpp)
+add_executable(img_resizer src/img_resizer.cpp)
 
 
 target_link_libraries(img_publisher ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(img_viewer ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(img_saver ${catkin_LIBRARIES} ${OpenCV_LIBS})
 target_link_libraries(marker_handler ${catkin_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(img_resizer ${catkin_LIBRARIES} ${OpenCV_LIBS})
