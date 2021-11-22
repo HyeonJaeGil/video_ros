@@ -6,7 +6,6 @@
 #include <map>
 
 
-
 class MarkerHandler
 {
 protected:
@@ -80,7 +79,13 @@ void MarkerHandler::img_cb(const sensor_msgs::ImageConstPtr& image_msg)
     {
         ROS_ERROR("Could not convert from '%s' to 'mono8'.", image_msg->encoding.c_str());
     }
-    
+
+    if (!markerIds.size())
+    {
+        cv::aruco::drawDetectedMarkers(frame, markerCorners, markerIds);
+        std::vector<cv::Vec3d> rvecs, tvecs;
+        cv::aruco::estimatePoseBoard(markerCorners, markerIds, )
+    }    
 
 
 }
