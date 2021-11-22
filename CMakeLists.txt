@@ -1,8 +1,6 @@
 project(webcam2ros)
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/clang++-13")
-
 find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   image_transport
@@ -18,7 +16,7 @@ include_directories(
 )
 
 catkin_package( 
-  INCLUDE_DIRS include
+  INCLUDE_DIRS
   LIBRARIES
   CATKIN_DEPENDS roscpp std_msgs image_transport sensor_msgs std_msgs cv_bridge
   DEPENDS
