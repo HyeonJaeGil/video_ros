@@ -1,0 +1,5 @@
+<launch>
+    <node name="marker_handler" pkg="webcam2ros" type="marker_handler" output="screen"/>
+        <param name="img_topic" value="/camera/fisheye1/image_raw"/>
+        <param name="caminfo_topic" value="/camera/fisheye1/camera_info"/>
+</launch>
