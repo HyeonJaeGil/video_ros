@@ -1,0 +1,17 @@
+<launch>
+
+    <arg name="ns" default="cam1"/>
+    <arg name="name" default="saver1"/>
+    <arg name="img_topic" default="/camera/fisheye1/image_raw"/>
+    <arg name="key_topic" default="/key_input"/>
+    <arg name="save_dir" default="/home/hj/Data/"/>
+        
+    <!-- <group ns="$(arg ns)"> -->
+        <node name="$(arg name)" pkg="webcam2ros" type="img_saver" output="screen">
+            <param name="img_topic" value="$(arg img_topic)"/>
+            <param name="key_topic" value="$(arg key_topic)"/>
+            <param name="save_dir"  value="$(arg save_dir)"/>
+        </node>
+    <!-- </group> -->
+    
+</launch>

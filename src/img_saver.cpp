@@ -12,7 +12,7 @@ namespace
 
   cv::Mat frame;
   int frame_count = 0;
-
+  std::string img_topic, key_topic, save_dir;
 }
 
 
@@ -23,8 +23,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
   {
     frame = cv_bridge::toCvShare(msg, "bgr8")->image;
     cv::imshow("view", frame);
-    std::cout << frame_count << std::endl;
-    frame_count++;
+    // std::cout << frame_count << std::endl;
   }
   catch (cv_bridge::Exception& e)
   {
@@ -35,8 +34,14 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 void keyCallback(const std_msgs::StringConstPtr & msg)
 {
   std::cout << (msg->data).data() << std::endl;
-  if(msg->data == std::string{'s'})
-    cv::imwrite("/home/jay/Data/frame_" + std::to_string(frame_count) + ".png", frame);
+  if(msg->data == std::string{'s'} && !frame.empty())
+  {    
+    // cv::imwrite(std::string{std::getenv("HOME")} + std::string{"/Data/frame_"} + std::to_string(frame_count) + ".png", frame);
+    std::string filename = "frame_" + std::to_string(frame_count) + ".png";
+    std::cout << filename << std::endl;
+    cv::imwrite(save_dir + filename, frame);
+    frame_count++;
+  }
     
 }
 
@@ -44,12 +49,15 @@ void keyCallback(const std_msgs::StringConstPtr & msg)
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "img_viewer");
-  ros::NodeHandle nh;
+  ros::NodeHandle nh("~");
   cv::namedWindow("view");
   cv::startWindowThread();
+  nh.getParam("img_topic", img_topic);
+  nh.getParam("key_topic", key_topic);
+  nh.getParam("save_dir", save_dir);
   image_transport::ImageTransport it(nh);
-  image_transport::Subscriber img_sub = it.subscribe("/blackfly/image_mono", 1, imageCallback);
-  ros::Subscriber key_sub = nh.subscribe("/key_input", 1, keyCallback);
+  image_transport::Subscriber img_sub = it.subscribe(img_topic, 1, imageCallback);
+  ros::Subscriber key_sub = nh.subscribe(key_topic, 1, keyCallback);
   ros::spin();
   cv::destroyWindow("view");
 }
